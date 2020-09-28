@@ -45,6 +45,10 @@ void add_client()
 	printf("> ");
 	scanf("%s", client.phone);
 
+	printf("주소를 입력하세요.\n");
+	printf(">");
+	scanf("%s", client.address);
+
 	fwrite(&client, sizeof(Client), 1, fp);
 
 	fclose(fp);
@@ -88,13 +92,13 @@ void show_list()
 		return ;
 	}
 
-	sprintf(buffer, "%4s  %-16s  %-16s  %-2s      %s", "번호", "이름", "아이디", "나이", "연락처");
+	sprintf(buffer, "%4s  %-16s  %-16s  %-2s      %s         %s", "번호", "이름", "아이디", "나이", "연락처", "주소");
 	printf("%s\n", buffer);
 
 	while(fread(&client, sizeof(Client), 1, fp) != 0)
 	{
 		fgetc(fp);
-		sprintf(buffer, "%-4d  %-16s%-16s%-2d   %s", client.num, client.name, client.id, client.age, client.phone);
+		sprintf(buffer, "%-4d  %-16s%-16s%-2d   %s      %s", client.num, client.name, client.id, client.age, client.phone, client.address);
 		printf("%s\n", buffer);
 	}
 
@@ -133,10 +137,16 @@ void modify_list()
 
 	    printf("수정 할 전화번호>");
 	    scanf("%s", client.phone);
+	    
+		printf("수정 할 주소>");
+		scanf("%s", client.address);
 
-	    fwrite(&client, sizeof(Client), 1, fp);
-		sprintf(buffer, "%-4d  %-16s%-16s%-2d   %s", client.num, client.name, client.id, client.age, client.phone);
-	//	printf("%s\n", buffer);
+	    fseek(fp,((client.num-1)*(sizeof(Client)+1)), SEEK_SET);
+		
+		fwrite(&client, sizeof(Client), 1, fp);
+		fputc('\n',fp);
+		sprintf(buffer, "%-4d  %-16s%-16s%-2d   %s     %s", client.num, client.name, client.id, client.age, client.phone, client.address);
+//		printf("%s\n", buffer);
 		break;
 	  }
 	}
