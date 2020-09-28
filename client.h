@@ -12,3 +12,4 @@ typedef struct _client {
 
 void add_client();
 void show_list();
+int check_client(char*);

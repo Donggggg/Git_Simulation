@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "client.h"
+#include <string.h>
 
 void add_client()
 {
@@ -23,6 +24,14 @@ void add_client()
 	printf("> ");
 	scanf("%s", client.id);
 
+	if (check_client(client.id) == 0)
+	{
+		printf("already exist\n");
+		
+		fclose(fp);
+		return;
+	}
+
 	printf("비밀번호를 입력하세요\n");
 	printf("> ");
 	scanf("%s", client.passwd);
@@ -39,6 +48,33 @@ void add_client()
 
 	fclose(fp);
 }
+
+int  check_client(char* id)
+{
+	FILE *fp;
+	Client client;
+
+	if((fp = fopen("list.txt", "r")) == NULL){
+		fprintf(stderr, "no list.\n");
+		return 0;
+	}
+
+	while(fread(&client, sizeof(Client),1,fp) != 0)
+	{
+		fgetc(fp);
+		if(strcmp(id, client.id) == 0)
+		{
+			fclose(fp);
+			return 0;
+			
+		}
+
+	}
+	fclose(fp);
+	return 1;
+}
+
+	
 
 void show_list()
 {
